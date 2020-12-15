@@ -6,6 +6,8 @@ using namespace std;
 
 void dodaj(double** tab, double**tab2, int row, int row2, int column, int column2); //funkcja wykonujaca operacje dodawania na macierzach
 void odejmij(double** tab, double**tab2, int row, int row2, int column, int column2);//funkcja wykonujaca operacje odejmowania na macierzach
+void wyznacznik(double** tab, int w); //funkcja nieskonczona, narazie liczy wyznaczniki tylko dla macierzy max 2 stopnia
+
 
 int main(void)
 {
@@ -17,10 +19,10 @@ int main(void)
 
 
     //wybranie operacji jaka ma zostac wykonana na macierzach
-    cout << "Wybierz dzialanie jakie ma zostac wykonane na macierzach:\n 1:  dodawanie\n 2: odejmowanie\n 3: cosinnego\n" << endl;
+    cout << "Wybierz dzialanie jakie ma zostac wykonane na macierzach:\n 1:  dodawanie\n 2: odejmowanie\n 3: wyznacznik\n" << endl;
     int equation;
     cin >> equation;
-    if(equation == 3){
+    if(equation > 2){
         //wprowadzenie przez uzytkownika wielkosci macierzy
         cout << "podaj ilosc kolumn macierzy" << endl;
         cin >> column;
@@ -35,23 +37,22 @@ int main(void)
             cout << "zacznij wypelniac tabele. wiersz" << " " << i + 1 << endl;
             for (int j = 0; j < row; ++j)
                 cin >> tab[i][j];
-                for (int i = 0; i < column; ++i, cout << endl)
-
+                }
+        for (int i = 0; i < column; ++i, cout << endl)
         {
             cout << "\t |";
             for (int j = 0; j < row; ++j)
-            {
-                cout << " " << tab[i][j] << " ";
-
-            }
-            cout << "|";
-            }
-            cout << endl;
+        {
+            cout << "  " << tab[i][j] << " ";
         }
+            cout << "|";
+        }
+        cout << endl;
+
         switch(equation)
         {
             case 3:
-                // miejsce na fukcje
+                wyznacznik(tab, row); //funkcja liczaca wyznacznik funkcji(nieskonczona)
                  break;
             default:
                 cout<<"Podano zly numer!";
@@ -101,7 +102,7 @@ int main(void)
             cout << "\t |";
             for (int j = 0; j < row; ++j)
             {
-                cout << " " << tab[i][j] << " ";
+                cout << "  " << tab[i][j] << " ";
 
             }
             cout << "|";
@@ -114,7 +115,7 @@ int main(void)
             cout << "\t |";
             for (int j = 0; j < row2; ++j)
             {
-                cout << " " << tab2[i][j] << " ";
+                cout << "  " << tab2[i][j] << " ";
 
             }
             cout << "|";
@@ -214,6 +215,34 @@ void odejmij(double** tab, double**tab2, int row, int row2, int column, int colu
             delete[] tab_result[i];
         delete[] tab_result;
         tab_result = NULL;
+    }
+}
+
+void wyznacznik(double** tab, int w){
+    double wyzn;
+    if(w==1)
+        cout<<tab[0][0];
+    else if(w == 2){
+        wyzn = tab[0][0]*tab[1][1] - tab[0][1]*tab[1][0];
+        cout<<wyzn;
+    }
+    else{
+        double** temp = new double* [w];
+        for(int i=0; i<w; i++)
+            tab[i] = new double[w];
+        double k;
+        for(int i=0; i<w-1; i++){
+            k = 1/tab[w-1][w-1];
+            for(int j=0; j<w-1; j++){
+                temp[i][j] = k*tab[i][j];
+            }
+        }
+        w--;
+        wyznacznik(temp, w);
+        for (int i(0); i < w; ++i)
+            delete[] temp[i];
+        delete[] temp;
+        temp = NULL;
     }
 }
 
