@@ -6,7 +6,7 @@ using namespace std;
 
 void dodaj(double** tab, double**tab2, int row, int row2, int column, int column2); //funkcja wykonujaca operacje dodawania na macierzach
 void odejmij(double** tab, double**tab2, int row, int row2, int column, int column2);//funkcja wykonujaca operacje odejmowania na macierzach
-void wyznacznik(double** tab, int w); //funkcja nieskonczona, narazie liczy wyznaczniki tylko dla macierzy max 2 stopnia
+void wyznacznik(double** tab, int w); //funkcja nieskonczona, narazie liczy wyznaczniki tylko dla macierzy max 3 stopnia
 
 
 int main(void)
@@ -43,7 +43,7 @@ int main(void)
             cout << "\t |";
             for (int j = 0; j < row; ++j)
         {
-            cout << "  " << tab[i][j] << " ";
+            cout << "  " << tab[i][j] << "  ";
         }
             cout << "|";
         }
@@ -54,6 +54,10 @@ int main(void)
             case 3:
                 wyznacznik(tab, row); //funkcja liczaca wyznacznik funkcji(nieskonczona)
                  break;
+
+            case 4: //miejsce na nowa funkcje
+                 break;
+
             default:
                 cout<<"Podano zly numer!";
 
@@ -102,7 +106,7 @@ int main(void)
             cout << "\t |";
             for (int j = 0; j < row; ++j)
             {
-                cout << "  " << tab[i][j] << " ";
+                cout << "  " << tab[i][j] << "  ";
 
             }
             cout << "|";
@@ -220,25 +224,32 @@ void odejmij(double** tab, double**tab2, int row, int row2, int column, int colu
 
 void wyznacznik(double** tab, int w){
     double wyzn;
-    if(w==1)
+    if(w == 1)
         cout<<tab[0][0];
     else if(w == 2){
         wyzn = tab[0][0]*tab[1][1] - tab[0][1]*tab[1][0];
         cout<<wyzn;
     }
+    else if(w == 3){
+        wyzn = tab[0][0]*tab[1][1]*tab[2][2]+tab[0][1]*tab[1][2]*tab[2][0]+tab[0][2]*tab[1][0]*tab[2][1];
+        wyzn += -tab[2][0]*tab[1][1]*tab[0][2]-tab[2][1]*tab[1][2]*tab[0][0]-tab[2][2]*tab[1][0]*tab[0][1];
+        cout<<wyzn;
+
+    }
     else{
-        double** temp = new double* [w];
+        double** temp = new double* [w-1];
         for(int i=0; i<w; i++)
-            tab[i] = new double[w];
+            temp[i] = new double[w-1];
         double k;
         for(int i=0; i<w-1; i++){
-            k = 1/tab[w-1][w-1];
+            k = -(tab[i][w-1])/(tab[w-1][w-1]);
+            cout<<endl<<k<<endl;
             for(int j=0; j<w-1; j++){
-                temp[i][j] = k*tab[i][j];
+                temp[i][j] = tab[i][j]+tab[w-1][j]*k;
             }
         }
-        w--;
-        wyznacznik(temp, w);
+
+        wyznacznik(temp, w-1);
         for (int i(0); i < w; ++i)
             delete[] temp[i];
         delete[] temp;
