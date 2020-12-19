@@ -4,157 +4,170 @@
 
 using namespace std;
 
-void dodaj(double** tab, double**tab2, int row, int row2, int column, int column2); //funkcja wykonujaca operacje dodawania na macierzach
-void odejmij(double** tab, double**tab2, int row, int row2, int column, int column2);//funkcja wykonujaca operacje odejmowania na macierzach
-void wyznacznik(double** tab, int w); //funkcja nieskonczona, narazie liczy wyznaczniki tylko dla macierzy max 3 stopnia
-
+void add(double** tab, double**tab2, int row, int row2, int column, int column2); //funkcja wykonujaca operacje dodawania na macierzach
+void subtract(double** tab, double**tab2, int row, int row2, int column, int column2);//funkcja wykonujaca operacje odejmowania na macierzach
+void determinant(double** tab, int dimension, double detMultiplier ); //funkcja liczaca wyznacznik macierzy
 
 int main(void)
 {
     //deklaracja zmiennych - rozmiarow macierzy
     int column;
     int row;
-    int column2;
-    int row2;
-
-
-    //wybranie operacji jaka ma zostac wykonana na macierzach
-    cout << "Wybierz dzialanie jakie ma zostac wykonane na macierzach:\n 1:  dodawanie\n 2: odejmowanie\n 3: wyznacznik\n" << endl;
-    int equation;
-    cin >> equation;
-    if(equation > 2){
-        //wprowadzenie przez uzytkownika wielkosci macierzy
-        cout << "podaj ilosc kolumn macierzy" << endl;
-        cin >> column;
-        cout << "podaj ilosc wierszy macierzy" << endl;
-        cin >> row;
-
-        //deklarowanie tablic i wypisywanie
-        double** tab = new double* [column];
-        for (int i = 0; i < column; ++i)
+    while(true)
+    {
+        //wybranie operacji jaka ma zostac wykonana na macierzach
+        cout << "Wybierz dzialanie jakie ma zostac wykonane na macierzach:\n 1: Dodawanie\n 2: Odejmowanie\n 3: Wyznacznik\n 4: Zakoncz program\n" << endl;
+        int equation;
+        cin >> equation;
+        if(equation == 4)
+            exit(1);
+        if(equation > 2)
         {
-            tab[i] = new double[row];
-            cout << "zacznij wypelniac tabele. wiersz" << " " << i + 1 << endl;
-            for (int j = 0; j < row; ++j)
-                cin >> tab[i][j];
+            //wprowadzenie przez uzytkownika wielkosci macierzy
+            cout << "Podaj ilosc kolumn macierzy:" << endl;
+            cin >> column;
+            cout << "Podaj ilosc wierszy macierzy:" << endl;
+            cin >> row;
+
+            if(equation == 3 && row != column)
+            {
+                cout<<"Wyznacznik mozna obliczyc tylko z macierzy kwadratowej!\n\n";
+            }
+            else
+            {
+                //deklarowanie tablic i wypisywanie
+                double** tab = new double* [column];
+                for (int i = 0; i < column; ++i)
+                {
+                    tab[i] = new double[row];
+                    cout << "Zacznij wypelniac tabele. Wiersz" << " " << i + 1 << ':' << endl;
+                    for (int j = 0; j < row; ++j)
+                        cin >> tab[i][j];
                 }
-        for (int i = 0; i < column; ++i, cout << endl)
-        {
-            cout << "\t |";
-            for (int j = 0; j < row; ++j)
-        {
-            cout << "  " << tab[i][j] << "  ";
-        }
-            cout << "|";
-        }
-        cout << endl;
+                for (int i = 0; i < column; ++i, cout << endl)
+                {
+                    cout << "\t|\t";
+                    for (int j = 0; j < row; ++j)
+                    {
+                        cout <<tab[i][j]<< "\t";
+                    }
+                    cout << "|";
+                }
+                cout << endl;
+                double detMultiplier = 1; // zmienna potrzebna do policzenia wyznacznikow macierzy stopnia wiekszego niz 3
 
-        switch(equation)
-        {
-            case 3:
-                wyznacznik(tab, row); //funkcja liczaca wyznacznik funkcji(nieskonczona)
-                 break;
+                switch(equation)
+                {
+                case 3:
+                    if (column != row)
+                    {
+                        cout << "Nie mozna wyznaczyc wyznacznika macierzy o roznych wymiarach!";
+                        break;
+                    }
+                    determinant(tab, row, detMultiplier); //funkcja liczaca wyznacznik funkcji(nieskonczona)
+                    break;
 
-            case 4: //miejsce na nowa funkcje
-                 break;
+                default:
+                    cout<<"Podano zly numer!";
+                    break;
 
-            default:
-                cout<<"Podano zly numer!";
-
-        }
-        for (int i(0); i < column; ++i)
-            delete[] tab[i];
-        delete[] tab;
-        tab = NULL;
-
-    }
-    else{
-        //wprowadzenie przez uzytkownika wielkosci macierzy
-        cout << "podaj ilosc kolumn pierwszej macierzy" << endl;
-        cin >> column;
-        cout << "podaj ilosc wierszy pierwszej macierzy" << endl;
-        cin >> row;
-
-        cout << "podaj ilosc kolumn drugiej macierzy" << endl;
-        cin >> column2;
-        cout << "podaj ilosc wierszy drugiej macierzy" << endl;
-        cin >> row2;
-
-        //deklarowanie tablic i wypisywanie
-        double** tab = new double* [column];
-        for (int i = 0; i < column; ++i)
-        {
-            tab[i] = new double[row];
-            cout << "zacznij wypelniac tabele. wiersz" << " " << i + 1 << endl;
-            for (int j = 0; j < row; ++j)
-                cin >> tab[i][j];
-        }
-
-        double** tab2 = new double* [column2];
-        for (int i = 0; i < column2; ++i)
-        {
-            tab2[i] = new double[row2];
-            cout << "zacznij wypelniac tabele. wiersz" << " " << i + 1 << endl;
-            for (int j = 0; j < row2; ++j)
-                cin >> tab2[i][j];
-        }
-
-
-        for (int i = 0; i < column; ++i, cout << endl)
-
-        {
-            cout << "\t |";
-            for (int j = 0; j < row; ++j)
-            {
-                cout << "  " << tab[i][j] << "  ";
-
+                }
+                for (int i(0); i < column; ++i)
+                    delete[] tab[i];
+                delete[] tab;
+                tab = NULL;
             }
-            cout << "|";
         }
-        cout << endl;
-
-        for (int i = 0; i < column2; ++i, cout << endl)
-
+        else
         {
-            cout << "\t |";
-            for (int j = 0; j < row2; ++j)
-            {
-                cout << "  " << tab2[i][j] << " ";
+            int column2; // wymiary drugiej macierzy
+            int row2;
+            //wprowadzenie przez uzytkownika wielkosci macierzy
+            cout << "Podaj ilosc kolumn pierwszej macierzy" << endl;
+            cin >> column;
+            cout << "Podaj ilosc wierszy pierwszej macierzy" << endl;
+            cin >> row;
 
+            cout << "Podaj ilosc kolumn drugiej macierzy" << endl;
+            cin >> column2;
+            cout << "Podaj ilosc wierszy drugiej macierzy" << endl;
+            cin >> row2;
+
+            //deklarowanie tablic i wypisywanie
+            double** tab = new double* [column];
+            for (int i = 0; i < column; ++i)
+            {
+                tab[i] = new double[row];
+                cout << "Zacznij wypelniac tabele. Wiersz" << " " << i + 1 << ':' << endl;
+                for (int j = 0; j < row; ++j)
+                    cin >> tab[i][j];
             }
-            cout << "|";
-        };
-        switch (equation)
+
+            double** tab2 = new double* [column2];
+            for (int i = 0; i < column2; ++i)
+            {
+                tab2[i] = new double[row2];
+                cout << "Zacznij wypelniac tabele. Wiersz" << " " << i + 1 << ':' << endl;
+                for (int j = 0; j < row2; ++j)
+                    cin >> tab2[i][j];
+            }
+
+
+            for (int i = 0; i < column; ++i, cout << endl)
+
+            {
+                cout << "\t|\t";
+                for (int j = 0; j < row; ++j)
+                {
+                    cout << tab[i][j] << "\t";
+
+                }
+                cout << "|";
+            }
+            cout << endl;
+
+            for (int i = 0; i < column2; ++i, cout << endl)
+
+            {
+                cout << "\t|\t";
+                for (int j = 0; j < row2; ++j)
+                {
+                    cout << tab2[i][j] << "\t";
+
+                }
+                cout << "|";
+            };
+            switch (equation)
             {
             case 1:
-                dodaj(tab, tab2, row, row2, column, column2); //Dodawanie
+                add(tab, tab2, row, row2, column, column2); //Dodawanie
                 break;
 
             case 2:
-                odejmij(tab, tab2, row, row2, column, column2);//odejmowanie
+                subtract(tab, tab2, row, row2, column, column2);//odejmowanie
                 break;
 
             default:
-                cout << "wybrano zly numer" << endl;
+                cout << "Wybrano zly numer!" << endl;
             }
-        //odblokowanie pamięci
-        for (int i(0); i < column; ++i)
-            delete[] tab[i];
-        delete[] tab;
-        tab = NULL;
-        for (int i(0); i < column2; ++i)
-            delete[] tab2[i];
-        delete[] tab2;
-        tab2 = NULL;
+            //odblokowanie pamięci
+            for (int i(0); i < column; ++i)
+                delete[] tab[i];
+            delete[] tab;
+            tab = NULL;
+            for (int i(0); i < column2; ++i)
+                delete[] tab2[i];
+            delete[] tab2;
+            tab2 = NULL;
         }
-
+    }
 }
 
-void dodaj(double** tab, double**tab2, int row, int row2, int column, int column2)
+void add(double** tab, double**tab2, int row, int row2, int column, int column2)
 {
     if (column != column2 || row != row2)
     {
-        cout << "nie mozna dodawac macierzy o roznych wymiarach";
+        cout << "Nie mozna dodawac macierzy o roznych wymiarach!";
     }
     else
     {
@@ -165,15 +178,15 @@ void dodaj(double** tab, double**tab2, int row, int row2, int column, int column
             for (int j = 0; j < row2; ++j)
                 tab_result[i][j] = tab[i][j] + tab2[i][j];
         }
-        cout << "wynikiem dodawania tych macierzy jest" << endl;
+        cout << "Wynikiem dodawania tych macierzy jest: \n" << endl;
 
 
         for (int i = 0; i < column2; ++i, cout << endl)
         {
-            cout << "\t |";
+            cout << "\t|\t";
             for (int j = 0; j < row2; ++j)
             {
-                cout << " " << tab_result[i][j] << " ";
+                cout << tab_result[i][j] << "\t";
             }
             cout << "|";
         };
@@ -184,11 +197,11 @@ void dodaj(double** tab, double**tab2, int row, int row2, int column, int column
     }
 }
 
-void odejmij(double** tab, double**tab2, int row, int row2, int column, int column2)
+void subtract(double** tab, double**tab2, int row, int row2, int column, int column2)
 {
     if (column != column2 || row != row2)
     {
-        cout << "nie mozna dodawac macierzy o roznych wymiarach";
+        cout << "Nie mozna dodawac macierzy o roznych wymiarach!";
 
     }
     else
@@ -200,21 +213,19 @@ void odejmij(double** tab, double**tab2, int row, int row2, int column, int colu
             for (int j = 0; j < row2; ++j)
                 tab_result[i][j] = tab[i][j] - tab2[i][j];
         }
-        cout << "wynikiem odejmowania tych macierzy jest" << endl;
-
+        cout << "Wynikiem odejmowania tych macierzy jest: \n" << endl;
 
         for (int i = 0; i < column2; ++i, cout << endl)
 
         {
-            cout << "\t |";
+            cout << "\t|\t";
             for (int j = 0; j < row2; ++j)
             {
-                cout << " " << tab_result[i][j] << " ";
+                cout << tab_result[i][j] << "\t";
 
             }
             cout << "|";
         };
-
         for (int i(0); i < column2; ++i)
             delete[] tab_result[i];
         delete[] tab_result;
@@ -222,35 +233,40 @@ void odejmij(double** tab, double**tab2, int row, int row2, int column, int colu
     }
 }
 
-void wyznacznik(double** tab, int w){
-    double wyzn;
-    if(w == 1)
+void determinant(double** tab, int dimension, double detMultiplier)
+{
+    if(dimension == 1) // wyznacznik macierzy pierwszego stopnia
         cout<<tab[0][0];
-    else if(w == 2){
-        wyzn = tab[0][0]*tab[1][1] - tab[0][1]*tab[1][0];
-        cout<<wyzn;
+    else if(dimension == 2) //wyznacznik macierzy drugiego stopnia
+    {
+        double det = tab[0][0]*tab[1][1] - tab[0][1]*tab[1][0];
+        cout<<det;
     }
-    else if(w == 3){
-        wyzn = tab[0][0]*tab[1][1]*tab[2][2]+tab[0][1]*tab[1][2]*tab[2][0]+tab[0][2]*tab[1][0]*tab[2][1];
-        wyzn += -tab[2][0]*tab[1][1]*tab[0][2]-tab[2][1]*tab[1][2]*tab[0][0]-tab[2][2]*tab[1][0]*tab[0][1];
-        cout<<wyzn;
-
+    else if(dimension == 3)// wyznacznik trzeciego stopnia
+    {
+        double det = tab[0][0]*tab[1][1]*tab[2][2]+tab[0][1]*tab[1][2]*tab[2][0]+tab[0][2]*tab[1][0]*tab[2][1];
+        det += -tab[2][0]*tab[1][1]*tab[0][2]-tab[2][1]*tab[1][2]*tab[0][0]-tab[2][2]*tab[1][0]*tab[0][1];
+        det *= detMultiplier;
+        cout<<det;
     }
-    else{
-        double** temp = new double* [w-1];
-        for(int i=0; i<w; i++)
-            temp[i] = new double[w-1];
-        double k;
-        for(int i=0; i<w-1; i++){
-            k = -(tab[i][w-1])/(tab[w-1][w-1]);
-            cout<<endl<<k<<endl;
-            for(int j=0; j<w-1; j++){
-                temp[i][j] = tab[i][j]+tab[w-1][j]*k;
+    else //wyznacznik czwartego stopnia luz wyzej
+    {
+        double** temp = new double* [dimension-1]; //deklaracja tablicy
+        for(int i=0; i<dimension; i++)
+            temp[i] = new double[dimension-1];
+        double k; // zmienna ktora wykorzystamy do przeprowadzenia operacji elementarnej na tablicy
+        for(int i=0; i<dimension-1; i++)
+        {
+            k = -(tab[i][dimension-1])/(tab[dimension-1][dimension-1]);
+            for(int j=0; j<dimension-1; j++)
+            {
+                temp[i][j] = tab[i][j]+tab[dimension-1][j]*k; // wykonanie operacji elementarnej na macierzy przeslanej do funkcji
             }
         }
 
-        wyznacznik(temp, w-1);
-        for (int i(0); i < w; ++i)
+        detMultiplier *= tab[dimension-1][dimension-1]; // zmienna ktora posluzy nam do wyznaczenia wyznacznika
+        determinant(temp, dimension-1, detMultiplier); // zastosowanie rekurencji
+        for (int i=0; i<dimension; ++i) // zwolnienie pamieci
             delete[] temp[i];
         delete[] temp;
         temp = NULL;
