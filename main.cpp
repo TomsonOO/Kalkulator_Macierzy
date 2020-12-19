@@ -59,11 +59,6 @@ int main(void)
                 switch(equation)
                 {
                 case 3:
-                    if (column != row)
-                    {
-                        cout << "Nie mozna wyznaczyc wyznacznika macierzy o roznych wymiarach!";
-                        break;
-                    }
                     determinant(tab, row, detMultiplier); //funkcja liczaca wyznacznik funkcji(nieskonczona)
                     break;
 
